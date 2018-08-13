@@ -1,6 +1,7 @@
 import praw
 import os
-from nba_players import players_dic
+import time
+from nba_players import players_dic, start_time
 
 reddit = praw.Reddit(client_id='fFCCdbz1412TtQ', client_secret='KkSdtRChP6uq-fe2usK04GYttbk', username='Arod16', password='paugasol16', user_agent='testscript by /u/Arod15')
 
@@ -31,13 +32,16 @@ def check_for_player(comment_string, comment_id):
             players_dic[name].append(comment_id)
 
 def search_for_players_frontpage():
-    for submission in reddit.subreddit('NBA').hot(limit=5):
+    i = 0
+    for submission in reddit.subreddit('NBA').hot(limit=75):
         submission.comments.replace_more(limit=0)
         flat_comments = submission.comments.list()
         for comment in flat_comments:
             comment_id = comment.fullname.split('_')[1]
             check_for_player(comment.body, comment_id)
-    check_nonzero_values()
+        i += 1
+    print(i)
+    # check_nonzero_values()
 
 def search_for_players_new():
     for comment in reddit.subreddit('NBA').stream.comments():

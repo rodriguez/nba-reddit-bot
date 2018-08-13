@@ -1,24 +1,27 @@
-from redditbot import players_dic
-
+from redditbot import players_dic, start_time
+import time
 # code below taken from Python Tutorials at https://pythonspot.com/matplotlib-bar-chart/
 # I am a novie programmer, so I feel more comfortable giving credit where it is deserved
 
 import matplotlib.pyplot as plt; plt.rcdefaults()
 import numpy as np
 import matplotlib.pyplot as plt
- 
-# players = [x for x in players_dic]
-graph_list = []
-for x in players_dic:
-    if players_dic[x] != 0:
-        graph_list.append(x)
 
-y_pos = np.arange(len(graph_list))
-values = [players_dic[x][0] for x in graph_list]
- 
-plt.bar(y_pos, values, align='center', alpha=0.5)
-plt.xticks(y_pos, graph_list)
-plt.ylabel('Number of Comments')
+players_comment = []
+
+for x in players_dic:
+    if players_dic[x][0] != 0:
+        players_comment.append([players_dic[x][0], x])
+print(players_comment)
+players_comment.sort()
+players = [x[1] for x in players_comment]
+values = [x[0] for x in players_comment]
+y_pos = np.arange(len(players))
+    
+plt.barh(y_pos, values, align='center', alpha=0.5)
+plt.yticks(y_pos, players)
+plt.xlabel('Number of Comments')
 plt.title('Frequency of Players in Comments')
- 
+
+print("--- %s seconds ---" % (time.time() - start_time))
 plt.show()
