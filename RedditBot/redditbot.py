@@ -10,13 +10,14 @@ def clear():
 def check_nonzero_values():
     for name in players_dic:
         if players_dic[name][0] != 0:
-            comment = reddit.comment(players_dic[name][1])
             print('----------')
             print('Name: ' + name)
             print('Value: ' + str(players_dic[name][0]))
-            print('First Comment: ' + comment.body)
-            print('Comment Score: ' + str(comment.score))
-            print('----------')
+            print('\n')
+            for comment_id in players_dic[name][1:]: # excludes the first item which is the counter
+                comment = reddit.comment(comment_id)
+                print('Comment: ' + comment.body)
+                print('Comment Score: ' + str(comment.score))
 def check_for_player(comment_string, comment_id):
     # Note: tried to get creative and check if a substring is a name
     # for word in comment_string.split():
@@ -37,17 +38,19 @@ def search_for_players_frontpage():
             comment_id = comment.fullname.split('_')[1]
             check_for_player(comment.body, comment_id)
     check_nonzero_values()
+
 def search_for_players_new():
     for comment in reddit.subreddit('NBA').stream.comments():
+        comment_id = comment.fullname.split('_')[1]
+        check_for_player(comment.body, comment_id)
         print(comment.body)
 
-# def main():
-    
-# main()
-search_for_players_frontpage()
-action = input('Enter 0 if you want to clear the screen: ')
-if not int(action):
-    clear()
+def main():
+    search_for_players_frontpage()
+    # action = input('Enter 0 if you want to clear the screen: ')
+    # if not int(action):
+    #     clear()
+main()
 
 # Known Issues:
 # 

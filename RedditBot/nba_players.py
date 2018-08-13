@@ -20,4 +20,5 @@ for player in json_dic:
     # players_dic[player['lastName'] + ', ' + player['firstName']] = [0]
     players_dic[player['firstName'] + ' ' + player['lastName']] = [0]
 
-print(players_dic)
+# print(players_dic)
+print('This code does run \n -------------')
