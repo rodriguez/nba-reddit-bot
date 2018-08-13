@@ -8,6 +8,7 @@
 
 # Apparently, there was an easier way to do this; someone already had a JSON with the names.
 # I took this JSON file from Nick Bottomley's (bttmly) project at https://github.com/bttmly/nba
+
 import json
 
 with open('players.json', 'r') as file:
@@ -16,7 +17,7 @@ with open('players.json', 'r') as file:
 players_dic = {}
 
 for player in json_dic:
-    players_dic[player['firstName'] + ' ' + player['lastName']] = 0
+    # players_dic[player['lastName'] + ', ' + player['firstName']] = [0]
+    players_dic[player['firstName'] + ' ' + player['lastName']] = ['0']
 
-print(players_dic)
-    
+# print(players_dic)
