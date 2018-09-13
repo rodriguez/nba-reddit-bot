@@ -33,7 +33,7 @@ def check_for_player(comment_string, comment_id):
 
 def search_for_players_frontpage():
     i = 0
-    for submission in reddit.subreddit('NBA').hot(limit=75):
+    for submission in reddit.subreddit('NBA').hot(limit=20):
         submission.comments.replace_more(limit=0)
         flat_comments = submission.comments.list()
         for comment in flat_comments:
