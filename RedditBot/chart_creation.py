@@ -26,4 +26,3 @@ def create_chart(dic):
     plt.xlabel('Probability of Positive Comments over Negative')
     plt.title('/r/NBA Comment Analysis on Players')
     plt.show()
-# def clean_player_value_pairs():
