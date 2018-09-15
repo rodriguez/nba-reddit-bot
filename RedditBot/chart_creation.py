@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 
 players_value_pairs = []
 
-def create_chart(dic):
+def create_chart_players(dic):
     for player in dic:
         players_value_pairs.append([dic[player]['comments'], player])
     players = [x[1] for x in players_value_pairs]
@@ -22,3 +22,6 @@ def create_chart(dic):
     plt.xlabel('Probability of Positive Comments over Negative')
     plt.title('/r/NBA Comment Analysis on Players')
     plt.show()
+
+def create_chart_player(dic):
+    return

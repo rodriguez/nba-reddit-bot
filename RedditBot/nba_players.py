@@ -13,5 +13,5 @@ with open('players.json', 'r') as file:
 
 
 for player in json_dic:
-    players_dic[player['firstName'] + ' ' + player['lastName']] = {'mentions': 0, 'comments': []}
+    players_dic[player['firstName'].upper() + ' ' + player['lastName'].upper()] = {'mentions': 0, 'comments': []}
     

@@ -3,7 +3,6 @@ import json
 
 from redditbot import *
 from nba_players import start_time, players_dic
-from chart_creation import create_chart
 
 
 def write_dic_to_json(dic):  
@@ -11,14 +10,19 @@ def write_dic_to_json(dic):
     f = open("players_dic.json", "w")
     f.write(hello)
     f.close()
+
 def read_json_to_dic():
     with open("players_dic.json") as file:
         dic = json.loads(file.read())
     return dic
 
-def main():
+def return_time():
+    print("--- %s seconds ---" % (time.time() - start_time))
+
+def init():
+    # initial test that will grab fresh data, use API calls to analyze the data, create new graph
     global players_dic
-    players_dic = search_for_players_frontpage(players_dic)
+    players_dic = search_sub_frontpage(players_dic)
     payload = prepare_payload(players_dic)
     api_results = get_sentiment_payload(payload)
     players_dic = clean_dic(players_dic)
@@ -31,8 +35,10 @@ def main():
     # if not int(action):
     #     clear()
 def test():
+    # runs program on data that is already gathered
     global players_dic
     players_dic = read_json_to_dic()
     pass_dic_for_chart(players_dic)
-    print("--- %s seconds ---" % (time.time() - start_time))
-test()
+    return_time()
+# test()
+print(players_dic)

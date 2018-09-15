@@ -4,35 +4,43 @@ import time
 import indicoio
 
 from config import *
-from chart_creation import create_chart
+from chart_creation import create_chart_players, create_chart_player
 
 indicoio.config.api_key = INDICO_API_KEY
 reddit = praw.Reddit(client_id=CLIENT_ID, client_secret=CLIENT_SECRET,
 username=USERNAME, password=PASSWORD, user_agent=USER_AGENT)
 
 
-def clear():
-    # windows clear function in order to have tests in the terminal be more clean
-    os.system('cls')
+# def clear():
+#     # windows clear function in order to have tests in the terminal be more clean
+#     os.system('cls')
 
 def replace_comments_with_ratios(dic, api_results):
     # to reduce runtime by n, I am looping through player keys and calculating which floats correspond to which players' comments
-    i = 0
-    results_length = len(api_results)
-    for player in dic:
-        if dic[player]['mentions'] != 0 and i < results_length:
-            num_comments = dic[player]['mentions']
-            next_i = i + num_comments
-            comment_slice = api_results[i:next_i]
-            i = next_i
-            # calculate average comment sentiment per player
-            avg_ratio = sum(comment_slice) / len(comment_slice)
-            dic[player]['comments'] = avg_ratio
+    if len(dic) == 1:
+        player = dic.keys
+        avg_ratio = sum(api_results) / len(api_results)
+        dic[player]['comments'] = avg_ratio
+    else:    
+        i = 0
+        results_length = len(api_results)
+        for player in dic:
+            if dic[player]['mentions'] != 0 and i < results_length:
+                num_comments = dic[player]['mentions']
+                next_i = i + num_comments
+                comment_slice = api_results[i:next_i]
+                i = next_i
+                # calculate average comment sentiment per player
+                avg_ratio = sum(comment_slice) / len(comment_slice)
+                dic[player]['comments'] = avg_ratio
     return dic
 
 def pass_dic_for_chart(dic):
     # possibly unnecessary helper function to create a graph from the dictionary
-    create_chart(dic)
+    if len(dic) == 1:
+        create_chart_player(dic)
+    else:
+        create_chart_players(dic)
 
 def prepare_payload(dic):
     # function that prepares the comments from players to be sent to the Indico API
@@ -66,19 +74,33 @@ def check_for_players(dic, comment_string):
             dic[name]['comments'].append(comment_string)
         # only do this for one player -- unit test
 
-def search_for_players_frontpage(dic):
+def check_for_specific_player(dic, comment_string, player_name):
+    if player_name.lower() in comment_string.lower():
+        dic[player_name]['mentions'] += 1
+        dic[player_name]['comments'].append(comment_string)
+    return dic
+
+def search_sub_frontpage(dic, player_name=None):
     # scraping function for subreddit frontpage
+    if player_name is not None:
+        player = {player_name: {'mentions': 0, 'comments': []}}
     for submission in reddit.subreddit('NBA').hot(limit=20):
         submission.comments.replace_more(limit=0)
         flat_comments = submission.comments.list()
         for comment in flat_comments:
-            check_for_players(dic, comment.body)
-    dic = clean_dic(dic)
-    return dic
+            if player_name is not None:
+                check_for_specific_player(dic, comment.body, player_name)
+            else:
+                check_for_players(player, comment.body)
+    if len(player) > 0:
+        player = clean_dic(player)
+        return player
+    else:
+        dic = clean_dic(dic)
+        return dic
 
 def search_for_players_new(dic):
     for comment in reddit.subreddit('NBA').stream.comments():
-        comment_id = comment.fullname.split('_')[1]
         check_for_players(dic, comment.body)
 
 
