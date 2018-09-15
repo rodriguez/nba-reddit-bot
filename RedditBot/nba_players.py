@@ -20,6 +20,5 @@ players_dic = {}
 
 for player in json_dic:
     players_dic[player['firstName'] + ' ' + player['lastName']] = {'name-drops': 0, 'comments': []}
-
-print(players_dic)
+    
 print('This code does run \n -------------')
