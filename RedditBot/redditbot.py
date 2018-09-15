@@ -1,10 +1,12 @@
 import praw
 import os
 import time
-from indico import *
-from config import CLIENT_ID, CLIENT_SECRET, USERNAME, PASSWORD, USER_AGENT
+import indicoio
+
+from config import *
 from chart_creation import create_chart
 
+indicoio.config.api_key = INDICO_API_KEY
 reddit = praw.Reddit(client_id=CLIENT_ID, client_secret=CLIENT_SECRET,
 username=USERNAME, password=PASSWORD, user_agent=USER_AGENT)
 
@@ -15,26 +17,39 @@ def clear():
 def replace_comments_with_ratios(dic, api_results):
     i = 0
     results_length = len(api_results)
-    for player in dic:
-        if dic[player]['name-drops'] != 0 and i < results_length:
-            num_comments = dic[player]['name-drops']
-            next_i = i + num_comments
-            comment_slice = api_results[i:next_i]
-            i = next_i
-            # calculate average comment sentiment per player
-            avg_ratio = sum(comment_slice) / len(comment_slice)
-            dic[player]['comments'] = avg_ratio
-    return dic
+    j = 0
+    a = 0
+    b = 0
+    for x in dic:
+        if dic[x]['mentions'] > 0:
+            j += dic[x]['mentions']
+            b += 1
+        a += 1
+    print('---------------')
+    print(results_length)
+    print(j)
+    print(a)
+    print(b)
+    # for player in dic:
+    #     if dic[player]['mentions'] != 0 and i < results_length:
+    #         num_comments = dic[player]['mentions']
+    #         next_i = i + num_comments
+    #         comment_slice = api_results[i:next_i]
+    #         i = next_i
+    #         # calculate average comment sentiment per player
+    #         avg_ratio = sum(comment_slice) / len(comment_slice)
+    #         dic[player]['comments'] = avg_ratio
+    # return dic
 
 def pass_dic_for_chart(dic):
     create_chart(dic)
+
 def prepare_payload(dic):
     payload = []
     for player in dic:
-        if dic[player]['name-drops'] != 0:
+        if dic[player]['mentions'] > 0:
             for comment in dic[player]['comments']:
                 payload.append(comment)
-                break
     return payload
 
 def get_sentiment_payload(payload):
@@ -44,7 +59,7 @@ def get_sentiment_payload(payload):
 def clean_dic(dic):
     new_dic = {}
     for player in dic:
-        if dic[player]['name-drops'] != 0:
+        if dic[player]['mentions'] != 0:
             new_dic[player] = dic[player]
     dic = new_dic
     return dic
@@ -52,10 +67,11 @@ def clean_dic(dic):
 def check_for_player(dic, comment_string):
     for name in dic:
         # going to start with just full name substrings like 'Kyrie Irving'
-        if name.lower() in comment_string.lower() and dic[name]['bool'] == False:
-            dic[name]['name-drops'] += 1
+        if name.lower() in comment_string.lower():
+        # if name.lower() in comment_string.lower() and dic[name]['bool'] == False:
+            dic[name]['mentions'] += 1
             dic[name]['comments'].append(comment_string)
-            dic[name]['bool'] = True
+            # dic[name]['bool'] = True
 
 def search_for_players_frontpage(dic):
     for submission in reddit.subreddit('NBA').hot(limit=20):

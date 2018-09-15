@@ -7,18 +7,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 players_value_pairs = []
+
 def create_chart(dic):
     for player in dic:
         players_value_pairs.append([dic[player]['comments'], player])
-    print(players_value_pairs)
-    print('players_value_pairs above------------')
     players_value_pairs.sort(reverse=True)
     players = [x[1] for x in players_value_pairs]
     values = [x[0] for x in players_value_pairs]
-    # players = players[:10]
-    # values = values[:10]
-    # print(players)
-    # print(values)
+    print(players)
+    print(values)
     y_pos = np.arange(len(players))
 
     plt.barh(y_pos, values, align='center', alpha=0.5)
