@@ -1,31 +1,29 @@
-from redditbot import players_dic, start_time
-import time
+
 # code below taken from Python Tutorials at https://pythonspot.com/matplotlib-bar-chart/
-# I am a novie programmer, so I feel more comfortable giving credit where it is deserved
+# I am a novice programmer, so I feel more comfortable giving credit where it is deserved
 
 import matplotlib.pyplot as plt; plt.rcdefaults()
 import numpy as np
 import matplotlib.pyplot as plt
 
-players_comment = []
-def create_chart():
-    for x in players_dic:
-        if players_dic[x][0] != 0:
-            players_comment.append([players_dic[x][0], x])
-    players_comment.sort(reverse=True)
-    print(players_comment)
-    players = [x[1] for x in players_comment]
-    values = [x[0] for x in players_comment]
-    players = players[:10]
-    values = values[:10]
-    print(values)
+players_value_pairs = []
+def create_chart(dic):
+    for player in dic:
+        players_value_pairs.append([dic[player]['comments'], player])
+    print(players_value_pairs)
+    print('players_value_pairs above------------')
+    players_value_pairs.sort(reverse=True)
+    players = [x[1] for x in players_value_pairs]
+    values = [x[0] for x in players_value_pairs]
+    # players = players[:10]
+    # values = values[:10]
+    # print(players)
+    # print(values)
     y_pos = np.arange(len(players))
 
     plt.barh(y_pos, values, align='center', alpha=0.5)
     plt.yticks(y_pos, players)
-    plt.xlabel('Number of Comments')
-    plt.title('Frequency of Players in Comments')
-
-
-
-plt.show()
+    plt.xlabel('Probability of Positive Comments over Negative')
+    plt.title('/r/NBA Comment Analysis on Players')
+    plt.show()
+# def clean_player_value_pairs():

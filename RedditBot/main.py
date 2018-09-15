@@ -1,9 +1,10 @@
 from redditbot import *
 from nba_players import start_time
+from chart_creation import create_chart
 import time
+
 def main():
     search_for_players_frontpage()
-    clean_players_dic()
     prepare_payload()
     replace_comments_with_ratios()
     print("--- %s seconds ---" % (time.time() - start_time))

@@ -17,8 +17,9 @@ with open('players.json', 'r') as file:
     json_dic = json.load(file)
 
 players_dic = {}
+dic_for_chart_file = {}
 
 for player in json_dic:
-    players_dic[player['firstName'] + ' ' + player['lastName']] = {'name-drops': 0, 'comments': []}
+    players_dic[player['firstName'] + ' ' + player['lastName']] = {'name-drops': 0, 'comments': [], 'bool': False}
     
 print('This code does run \n -------------')
