@@ -11,14 +11,13 @@ players_value_pairs = []
 def create_chart(dic):
     for player in dic:
         players_value_pairs.append([dic[player]['comments'], player])
-    players_value_pairs.sort(reverse=True)
     players = [x[1] for x in players_value_pairs]
     values = [x[0] for x in players_value_pairs]
     print(players)
     print(values)
     y_pos = np.arange(len(players))
 
-    plt.barh(y_pos, values, align='center', alpha=0.5)
+    plt.barh(y_pos, values, align='center', alpha=None)
     plt.yticks(y_pos, players)
     plt.xlabel('Probability of Positive Comments over Negative')
     plt.title('/r/NBA Comment Analysis on Players')

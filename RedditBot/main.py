@@ -1,8 +1,10 @@
+import time
+import json
+
 from redditbot import *
 from nba_players import start_time, players_dic
 from chart_creation import create_chart
-import time
-import json
+
 
 def write_dic_to_json(dic):  
     hello = json.dumps(dic)
