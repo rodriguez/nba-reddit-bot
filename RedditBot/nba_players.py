@@ -19,6 +19,6 @@ with open('players.json', 'r') as file:
 players_dic = {}
 
 for player in json_dic:
-    players_dic[player['firstName'] + ' ' + player['lastName']] = {'mentions': 0, 'comments': [], 'bool': False}
+    players_dic[player['firstName'] + ' ' + player['lastName']] = {'mentions': 0, 'comments': []}
     
 print('This code does run \n -------------')
