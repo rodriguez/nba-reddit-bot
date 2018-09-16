@@ -23,5 +23,18 @@ def create_chart_players(dic):
     plt.title('/r/NBA Comment Analysis on Players')
     plt.show()
 
-def create_chart_player(dic):
-    return
+def create_chart_player(dic, player_name):
+    player_values_pair = [dic[player_name]['comments'], player_name]
+    player = [player_name]
+    values = player_values_pair[0]
+    num_comment = [x for x in range(1, len(values) + 1)]
+    print(player)
+    print(values)
+    plt.rcParams["font.size"] = 16
+    y_pos = np.arange(len(values))
+    plt.bar(y_pos, values, align='center', alpha=None)
+    plt.xticks(y_pos, num_comment)
+    title = "/r/NBA Comment Analysis on " + player_name
+    plt.xlabel(title)
+    plt.title('Probability of Positive Comments over Negative')
+    plt.show()

@@ -15,12 +15,10 @@ username=USERNAME, password=PASSWORD, user_agent=USER_AGENT)
 #     # windows clear function in order to have tests in the terminal be more clean
 #     os.system('cls')
 
-def replace_comments_with_ratios(dic, api_results):
+def replace_comments_with_ratios(dic, api_results, player_name=None):
     # to reduce runtime by n, I am looping through player keys and calculating which floats correspond to which players' comments
-    if len(dic) == 1:
-        player = dic.keys
-        avg_ratio = sum(api_results) / len(api_results)
-        dic[player]['comments'] = avg_ratio
+    if player_name is not None:
+        dic[player_name]['comments'] = api_results
     else:    
         i = 0
         results_length = len(api_results)
@@ -35,20 +33,24 @@ def replace_comments_with_ratios(dic, api_results):
                 dic[player]['comments'] = avg_ratio
     return dic
 
-def pass_dic_for_chart(dic):
+def pass_dic_for_chart(dic, player_name=None):
     # possibly unnecessary helper function to create a graph from the dictionary
-    if len(dic) == 1:
-        create_chart_player(dic)
+    if player_name is not None:
+        create_chart_player(dic, player_name)
     else:
         create_chart_players(dic)
 
-def prepare_payload(dic):
+def prepare_payload(dic, player_name=None):
     # function that prepares the comments from players to be sent to the Indico API
     payload = []
-    for player in dic:
-        if dic[player]['mentions'] > 0:
-            for comment in dic[player]['comments']:
+    if player_name is not None:
+        for comment in dic[player_name]['comments']:
                 payload.append(comment)
+    else:
+        for player in dic:
+            if dic[player]['mentions'] > 0:
+                for comment in dic[player]['comments']:
+                    payload.append(comment)
     return payload
 
 def get_sentiment_payload(payload):
@@ -82,8 +84,8 @@ def check_for_specific_player(dic, comment_string, player_name):
 
 def search_sub_frontpage(dic, player_name=None):
     # scraping function for subreddit frontpage
-    if player_name is not None:
-        player = {player_name: {'mentions': 0, 'comments': []}}
+    # if player_name is not None:
+    #     player = {player_name: {'mentions': 0, 'comments': []}}
     for submission in reddit.subreddit('NBA').hot(limit=20):
         submission.comments.replace_more(limit=0)
         flat_comments = submission.comments.list()
@@ -91,13 +93,10 @@ def search_sub_frontpage(dic, player_name=None):
             if player_name is not None:
                 check_for_specific_player(dic, comment.body, player_name)
             else:
-                check_for_players(player, comment.body)
-    if len(player) > 0:
-        player = clean_dic(player)
-        return player
-    else:
+                check_for_players(dic, comment.body)
+    if len(dic) > 1:
         dic = clean_dic(dic)
-        return dic
+    return dic
 
 def search_for_players_new(dic):
     for comment in reddit.subreddit('NBA').stream.comments():
