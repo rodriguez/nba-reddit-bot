@@ -86,7 +86,7 @@ def search_sub_frontpage(dic, player_name=None):
     # scraping function for subreddit frontpage
     # if player_name is not None:
     #     player = {player_name: {'mentions': 0, 'comments': []}}
-    for submission in reddit.subreddit('NBA').hot(limit=20):
+    for submission in reddit.subreddit('NBA').hot(limit=100):
         submission.comments.replace_more(limit=0)
         flat_comments = submission.comments.list()
         for comment in flat_comments:

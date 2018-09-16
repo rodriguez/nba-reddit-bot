@@ -67,4 +67,4 @@ def unit_test():
     player_dic = read_json_to_dic(name)
     pass_dic_for_chart(player_dic, name)
     return_time()
-unit_test()
+init()
